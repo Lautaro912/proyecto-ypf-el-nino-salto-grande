@@ -1,5 +1,7 @@
 # ENSO y caudal en Salto Grande
 
+[![Abrir en Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Lautaro912/proyecto-ypf-el-nino-salto-grande/blob/main/Propuesta_Proyecto_YPF.ipynb)
+
 Proyecto de Ciencia de Datos desarrollado en el marco de la formación de Fundación YPF — Grupo 13, Comisión 4.
 
 ## Descripción
