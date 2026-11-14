@@ -1,106 +1,164 @@
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Lautaro912/proyecto-ypf-el-nino-salto-grande/blob/main/Propuesta_Proyecto_YPF.ipynb)
 
-# ENSO y caudal en Salto Grande
+# ENSO y caudal mensual en Salto Grande
 
-Proyecto de Ciencia de Datos desarrollado en el marco de la formación de Fundación YPF — Grupo 13, Comisión 4.
+Proyecto de Ciencia de Datos desarrollado en el marco de la formación de **Fundación YPF — Grupo 13, Comisión 4**.
 
-## Descripción
+**Integrantes:** Francisco Quarin y Lautaro Moya.
 
-Este proyecto explora la relación entre la variabilidad de ENSO —El Niño–Oscilación del Sur— y el caudal medio mensual registrado en Salto Grande Arriba, en la cuenca del río Uruguay.
+## Descripción del proyecto
 
-La disponibilidad de agua es relevante para la generación hidroeléctrica. Comprender sus asociaciones con indicadores climáticos puede aportar antecedentes para futuras investigaciones orientadas a la planificación energética.
+Este proyecto analiza la relación entre la variabilidad de ENSO —El Niño–Oscilación del Sur— y el caudal medio mensual registrado en Salto Grande Arriba, en la cuenca del río Uruguay.
 
-La primera entrega consiste en un análisis exploratorio de datos (EDA). No incluye un modelo predictivo ni una evaluación directa de la seguridad del suministro eléctrico.
+ENSO es un fenómeno de interacción entre el océano y la atmósfera del Pacífico tropical. Sus fases se relacionan con cambios en la circulación atmosférica y pueden influir en los patrones de precipitación de distintas regiones. La disponibilidad de agua resulta relevante para la generación hidroeléctrica, por lo que estudiar su relación con indicadores climáticos puede aportar información para futuras investigaciones sobre planificación energética.
+
+El trabajo utiliza tres índices climáticos —ONI, RONI y SOI— y una serie de caudal del Instituto Nacional del Agua (INA).
+
+El notebook desarrolla tres líneas de análisis:
+
+1. **Análisis exploratorio de datos (EDA):** revisión de calidad, cobertura, distribuciones, evolución temporal, estacionalidad y dependencia temporal.
+2. **Modelado supervisado:** evaluación de modelos lineales para estimar anomalías mensuales de caudal a horizontes de uno y tres meses.
+3. **Aprendizaje no supervisado:** aplicación de K-Means para explorar agrupamientos retrospectivos de condiciones climáticas e hidrológicas.
+
+El objetivo es estudiar asociaciones y evaluar alternativas analíticas. El proyecto no predice directamente la generación eléctrica ni constituye una herramienta operativa de despacho energético.
 
 ## Pregunta de investigación
 
-¿Qué asociaciones se observan entre los índices ONI, RONI y SOI y el caudal medio mensual registrado en Salto Grande Arriba durante 1996–2025?
+¿Qué relación existe entre los índices ONI, RONI y SOI y el comportamiento del caudal mensual registrado en Salto Grande Arriba? ¿En qué medida estos indicadores, combinados o por separado, aportan información para estimar anomalías de caudal a uno y tres meses?
 
 ## Objetivos
 
-- Examinar la estructura, cobertura temporal y calidad de los datos.
-- Identificar valores faltantes, duplicados y observaciones extremas.
-- Describir la distribución y evolución temporal de cada variable.
-- Explorar la estacionalidad del caudal y la autocorrelación de los índices.
-- Analizar las asociaciones contemporáneas entre los índices y el caudal.
+### Objetivo general
+
+Analizar la relación entre indicadores de ENSO y el caudal mensual de Salto Grande Arriba mediante técnicas de análisis exploratorio, modelado supervisado y aprendizaje no supervisado.
+
+### Objetivos específicos
+
+- Documentar las fuentes, variables, unidades y coberturas temporales.
+- Examinar la calidad de los datos e identificar valores ausentes, códigos de ausencia, duplicados y discontinuidades.
+- Describir las distribuciones y la evolución temporal de las variables.
+- Explorar la estacionalidad del caudal y la dependencia temporal de los índices.
+- Analizar las asociaciones contemporáneas entre ONI, RONI, SOI y caudal.
+- Construir y evaluar modelos supervisados para estimar anomalías de caudal a uno y tres meses.
+- Comparar el aporte de la información climática con referencias basadas en climatología y persistencia.
+- Explorar agrupamientos de condiciones climáticas e hidrológicas mediante K-Means.
+- Identificar limitaciones y oportunidades de mejora para futuras investigaciones.
 
 ## Datos utilizados
 
-| Dataset | Variable principal | Fuente |
+| Serie | Variable principal | Fuente |
 |---|---|---|
-| Salto Grande Arriba | Caudal medio mensual, en m³/s. Serie 24743, estación 77. | Instituto Nacional del Agua (INA) |
-| ONI | Anomalía de temperatura superficial del mar en la región Niño 3.4, promediada en trimestres móviles. | NOAA Climate Prediction Center |
-| RONI | Índice oceánico relativo que considera el contexto térmico de los océanos tropicales. | NOAA, archivo obtenido mediante PSL |
-| SOI | Índice atmosférico mensual de Oscilación del Sur de Troup, adimensional. | Australian Bureau of Meteorology |
+| Salto Grande Arriba | Caudal medio mensual (m³/s), serie 24743, estación 77 | Instituto Nacional del Agua (INA) |
+| ONI | Anomalía de temperatura superficial del mar en la región Niño 3.4, calculada mediante trimestres móviles | NOAA Climate Prediction Center |
+| RONI | Índice oceánico relativo de El Niño | NOAA / archivo obtenido mediante PSL |
+| SOI | Índice mensual de Oscilación del Sur de Troup | Australian Bureau of Meteorology |
 
-Fuentes de consulta:
+El análisis conjunto exploratorio utiliza el período **1996–2025**. En los resultados guardados de esa etapa se utilizaron 359 meses completos de los 360 meses calendario del período.
 
-- [Información hidrológica del INA](https://alerta.ina.gob.ar/)
-- [Datos del ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt)
-- [Información del RONI](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/)
-- [Series climáticas de NOAA PSL](https://psl.noaa.gov/data/timeseries/month/)
-- [Datos mensuales del SOI](https://www.bom.gov.au/clim_data/IDCKGSH000/soi_monthly.txt)
-
-La serie de Salto Grande se interpreta como caudal registrado en la estación. Su equivalencia con el aporte natural total al embalse no se considera verificada.
+La cobertura individual de cada fuente es más amplia y no debe confundirse con el período común utilizado para integrar las series.
 
 ## Metodología
 
-1. Inspección de dimensiones, tipos de datos, cobertura y duplicados.
-2. Identificación de nulos, códigos de ausencia y meses sin registros.
-3. Exploración individual mediante estadísticas descriptivas, series temporales, histogramas y boxplots.
-4. Exploración del caudal por mes calendario.
-5. Análisis de autocorrelación de los índices climáticos.
-6. Integración por año y mes para el período 1996–2025.
-7. Diagramas de dispersión y correlaciones de Pearson y Spearman.
+### 1. Preparación y exploración de los datos
 
-Los dataframes originales se conservan sin modificaciones. Las transformaciones necesarias para la integración se realizan en estructuras auxiliares.
+Se utilizaron Python, pandas y Matplotlib para cargar e inspeccionar las cuatro series. Se revisaron dimensiones, tipos de datos, valores faltantes, duplicados, cobertura temporal y distribuciones.
 
-Los códigos de ausencia del RONI se excluyen de los cálculos y visualizaciones correspondientes. Los valores extremos no se eliminan automáticamente y los datos faltantes no se interpolan.
+Se prestó especial atención a los códigos de ausencia presentes en el archivo RONI, ya que un valor codificado numéricamente no necesariamente es reconocido por pandas como dato nulo.
 
-## Resultados preliminares
+### 2. Análisis exploratorio
 
-El análisis conjunto utiliza 359 meses con información completa de los 360 meses del período seleccionado.
+Se analizaron las series temporales, distribuciones, valores extremos y comportamiento mensual del caudal. También se examinó la autocorrelación de los índices climáticos para reconocer su dependencia temporal.
 
-Se observan asociaciones positivas del caudal con ONI y RONI, y negativas con SOI. Los diagramas muestran una dispersión considerable: valores similares de los índices pueden acompañarse de caudales diferentes.
+### 3. Integración y asociaciones
 
-Estos resultados son exploratorios. No demuestran causalidad, capacidad predictiva ni superioridad de un índice sobre otro.
+Las series se integraron mediante referencias temporales de año y mes. Se exploraron asociaciones contemporáneas con diagramas de dispersión y correlaciones de Pearson y Spearman.
 
-## Limitaciones y verificaciones pendientes
+Estas correlaciones son descriptivas: no representan porcentajes de caudal explicado ni permiten establecer causalidad.
 
-- Confirmar la correspondencia entre las fechas del archivo RONI y sus períodos de cálculo.
-- Considerar la estacionalidad del caudal y los posibles desfases temporales.
-- Tener en cuenta la dependencia temporal de las observaciones al evaluar significancia estadística.
-- Documentar las versiones y fechas de descarga de los datos.
-- Corregir referencias a variables auxiliares no definidas y retirar bloques antiguos del notebook antes de validar su ejecución completa.
+### 4. Modelado supervisado
 
-El ONI se referencia al mes central de su trimestre móvil. Esta asignación no lo convierte en una observación mensual independiente ni en información disponible en tiempo real durante ese mes.
+Se evaluaron modelos lineales OLS y Ridge para estimar anomalías mensuales de caudal a horizontes de uno y tres meses.
 
-No se incluyen datos de generación eléctrica, demanda ni operación del embalse; por lo tanto, no se cuantifican impactos sobre la seguridad energética.
+La evaluación utiliza particiones cronológicas para respetar el orden temporal. Se comparan modelos con información ENSO, información hidrológica rezagada y combinaciones de ambas. También se consideran referencias de climatología y persistencia.
 
-## Notebook y ejecución
+El conjunto de prueba se reserva para la evaluación final, con orígenes desde enero de 2020, según la metodología documentada en las conclusiones del notebook.
 
-El análisis se desarrolla en `Propuesta_Proyecto_YPF.ipynb`, utilizando Python, pandas y Matplotlib en Google Colab.
+### 5. Aprendizaje no supervisado
 
-Para trabajar con el notebook:
+Se implementa K-Means con variables climáticas rezagadas y anomalías mensuales de caudal. Se incorpora escalado previo y evaluación de distintos valores de k mediante inercia y Silhouette.
 
-1. Abrirlo en Google Colab.
+Este análisis es retrospectivo: al utilizar información del caudal observado para formar los grupos, no debe interpretarse como un sistema de predicción anticipada.
+
+## Resultados
+
+### Análisis exploratorio
+
+En los resultados guardados del análisis conjunto se observan las siguientes asociaciones contemporáneas:
+
+| Índice | Pearson | Spearman |
+|---|---:|---:|
+| ONI | 0,495 | 0,370 |
+| RONI* | 0,488 | 0,355 |
+| SOI | −0,298 | −0,247 |
+
+\*La alineación temporal del RONI se considera provisional y requiere verificación de sus metadatos.
+
+Los coeficientes muestran asociaciones positivas entre caudal y ONI/RONI, y negativas entre caudal y SOI. La dispersión de los datos indica que valores similares de los índices pueden acompañarse de caudales diferentes.
+
+### Modelado supervisado
+
+La sección de conclusiones finales del notebook informa los siguientes resultados para los modelos seleccionados mediante validación cruzada:
+
+| Horizonte | Modelo seleccionado | MAE de Test (m³/s) | RMSE de Test (m³/s) | R² de Test |
+|---|---|---:|---:|---:|
+| 1 mes | ENSO + hidrológico — Ridge α=100 | 2627,62 | 3598,43 | 0,264 |
+| 3 meses | ENSO — Ridge α=100 | 2979,86 | 3930,24 | 0,137 |
+
+En esa misma sección se informa una reducción del MAE respecto de la referencia climatológica de aproximadamente 20,9 % para un mes y 10,7 % para tres meses.
+
+La comparación con modelos hidrológicos muestra que la mejora atribuible a incorporar ENSO es pequeña en la validación cruzada. Por lo tanto, estos resultados no demuestran de manera concluyente que los índices climáticos aporten una mejora incremental robusta frente a la información hidrológica disponible.
+
+Los valores anteriores corresponden a los resultados consignados en las conclusiones finales del notebook y deben contrastarse con una ejecución completa y reproducible de la versión definitiva.
+
+### Aprendizaje no supervisado
+
+El notebook incluye una implementación de K-Means para explorar agrupamientos de condiciones climáticas e hidrológicas. Los valores finales de k, Silhouette y los perfiles de los grupos deben obtenerse y revisarse a partir de la ejecución completa de esa sección. No se presentan aquí como resultados numéricos confirmados.
+
+## Limitaciones
+
+- La equivalencia entre el caudal registrado en la estación y el aporte natural total al embalse no está verificada.
+- La alineación temporal del RONI requiere confirmar documentalmente sus ventanas de cálculo.
+- ONI utiliza trimestres móviles, mientras que el caudal y SOI tienen resolución mensual; compartir una etiqueta de mes no significa que las ventanas temporales sean equivalentes.
+- Las correlaciones exploratorias no ajustan por estacionalidad ni dependencia temporal.
+- Los resultados predictivos dependen del período de entrenamiento, de prueba y de la disponibilidad efectiva de los índices.
+- Deben verificarse las fechas de publicación y las revisiones históricas de ONI, RONI y SOI antes de interpretar los pronósticos como información que habría estado disponible en tiempo real.
+- La evaluación no demuestra causalidad.
+- No se incluyen datos de generación eléctrica, demanda ni operación del embalse. Por eso no se cuantifican impactos sobre el despacho ni sobre la seguridad del suministro eléctrico.
+- Los resultados de K-Means deben verificarse con la ejecución completa de la sección correspondiente.
+
+## Cómo ejecutar el notebook
+
+El análisis se desarrolla en `Propuesta_Proyecto_YPF.ipynb` mediante Python y Google Colab.
+
+Para ejecutarlo:
+
+1. Abrir el notebook en Google Colab.
 2. Montar Google Drive.
 3. Ajustar la variable `carpeta` a la ubicación de los archivos.
 4. Disponer de los siguientes archivos:
    - `salto_grande_arriba_24743_1995-2026.json`
    - `roni.csv`
    - `soi_monthly.txt`
-5. Revisar las correcciones pendientes antes de ejecutar todas las celdas desde una sesión limpia.
+5. Ejecutar las celdas en orden desde una sesión limpia.
+6. Verificar que los resultados recalculados coincidan con las conclusiones documentadas.
 
-El ONI se descarga desde NOAA durante la ejecución. Las actualizaciones de la fuente pueden modificar la cantidad de registros y los resultados.
+El ONI se obtiene desde NOAA durante la ejecución, por lo que las actualizaciones de la fuente pueden modificar los registros y resultados.
 
 ## Próximos pasos
 
-- Consolidar una versión reproducible del notebook.
-- Verificar los metadatos y la alineación temporal.
-- Evaluar las asociaciones considerando la estacionalidad.
-- Explorar rezagos con una metodología explícita.
-- Determinar si los datos justifican una etapa posterior de modelado predictivo.
+- Consolidar una única versión del notebook y retirar bloques históricos o conclusiones que hayan quedado desactualizados.
+- Verificar la alineación temporal del RONI y los metadatos de la serie hidrológica.
+- Reproducir los resultados desde una sesión limpia.
 
 ## Referencias
 
